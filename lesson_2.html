@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Segmented 显示</title>
+<!-- 	
+	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.com/ext/beta/ext-5.0.0.736/build/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css">
+
+    <script type="text/javascript" src="http://cdn.sencha.com/ext/beta/ext-5.0.0.736/build/ext-all.js"></script>     
+	 -->
+ 
+	 <!-- Shared -->
+	<!-- ExtJS -->
+	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css">
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/ext-all-debug.js"></script> 
+	
+	
+    <!-- Example -->
+    <script type="text/javascript">
+
+/*
+Ext.Loader.setPath('Ext', 'http://cdn.sencha.com/ext/gpl/5.0.0');
+
+
+Ext.Loader.loadScript({
+	url:'http://cdn.sencha.com/ext/gpl/5.0.0/src/button/Segmented.js',
+	//url:'http://extjs/ext-4.2.1.883/examples/app/clothes/app/view/user/Edit', // 默认添加 .js
+	onLoad : function(optional){
+		console.log(optional);
+	},
+	onError : function(){
+		Ext.Msg.alert('ff','ff');
+	}
+});
+
+Ext.Loader.paths={
+	'My': 'http://cdn.sencha.com/ext/gpl/5.0.0/src/button/Segmented.js'
+};
+*/
+Ext.require([
+    'Ext.button.Segmented'
+]);
+	
+Ext.application({
+    name   : 'MyApp',
+
+    launch : function() {
+		
+		
+		Ext.create('Ext.Panel', {
+			title: 'Segmented 使用',
+			height: 150,
+			plain: true,
+			items:[{
+				xtype:'segmentedbutton',
+				id:'buttons',
+				//activeItem:0,
+				//defaultAlign:'center',
+				//disabled:true,
+				//style:'border: 1px solid #D9D9D9;',
+				//vertical : true,
+				items:[{
+					
+					text:'第一个按钮',
+					handler:function(){console.log('--');}
+				},{
+					id:'items-1',
+					text:'第二个按钮',
+					handler:function(){console.log('-2-');}
+				}]
+			}],
+			
+		   // renderTo: Ext.getBody() /
+		   renderTo: 'displaye'
+		});
+		
+	}
+});
+	</script>
+
+	<style>
+	a{color:#fff;font-size:14px;}
+	.desc{font-size:14px;margin:10px; background:#EC5A4C;padding:20px;color:#fff;font-weight: bold;}
+	</style>
+	
+</head>
+<body>
+
+<div id="displaye" style="margin:10px;"></div>
+<div class="desc" >
+	<a href="http://blog.mttqq.com"  target="_blank">犸特头</a><br>
+	<a href="http://blog.mttqq.com"  target="_blank">http://blog.mttqq.com</a><br>
+	extjs 学习记录<br>
+	QQ群：311176787 <br>
+	<a target="_blank" href="http://wp.qq.com/wpa/qunwpa?idkey=f50865b2598688abcae47cca8ae48b5c1ea26a45194c640071eefdd7212d3a2e">
+	<img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="extjs 技术交流" title="extjs 技术交流"></a>
+</div>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+	Ext.create('Ext.Panel', {
+		title: 'Segmented 使用',
+		height: 150,
+		plain: true,
+		items:[{
+			xtype:'segmentedbutton',
+			id:'buttons',
+			//activeItem : 1,
+			//defaultAlign:'center',
+			//disabled:true,
+			//style:'border: 1px solid #D9D9D9;',
+			//vertical : true,
+			items:[{
+				text:'第一个按钮',
+				handler:function(){console.log('--');}
+			},{
+				text:'第二个按钮',
+				handler:function(){console.log('-2-');}
+			}]
+		}],
+		
+	   // renderTo: Ext.getBody() /
+	   renderTo: 'displaye'
+	});
+</pre>
+</body>
+</html>
