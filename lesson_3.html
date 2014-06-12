@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>树型菜单结合tab切换</title>
+
+ 
+	 <!-- Shared -->
+	<!-- ExtJS -->
+	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css">
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/ext-all-debug.js"></script> 
+	
+    <!-- Example -->
+    <script type="text/javascript">
+
+	//Ext.Loader.setPath('Ext', 'http://cdn.sencha.com/ext/gpl/5.0.0/src');
+	//Ext.Loader.setPath('Ext', 'http://extjs/ext-5.0.0/src');
+	/*//
+	
+		Ext.require([
+			'Ext.tree.Panel',
+			'Ext.Tab.Panel'
+		]);
+	//*/
+Ext.application({
+    name   : 'MyApp',
+
+    launch : function() {
+		
+		
+			var store = Ext.create('Ext.data.TreeStore', {
+				root: {
+					expanded: true,
+					children: [
+						{id:3, text: "网络", expanded: true, children: [
+							{id:'3-1', text: "电子图书", leaf: true },
+							{id:'3-2', text: "开心游戏", leaf: true}
+						] },
+						{ id:4,text: "视频", leaf: true }
+					]
+				}
+			});
+			
+			Ext.create('Ext.panel.Panel',{
+				layout:'border',
+				height: 180,
+				renderTo: 'displaye',
+				items:[{
+					layout: 'fit',
+					region:'west',
+					//margin:5,
+					xtype:'treepanel',
+					title: '菜单树',
+					width: 200,
+					store: store,
+					split: true,  
+					collapsible: true, 
+					rootVisible: false,
+					listeners:{
+						// 加载
+						boxready:function(){
+							this.view.focus(); // 光标
+							this.getSelectionModel( ).select(this.getRootNode().childNodes[0]); // 选择 下标 0 
+						},
+						// 点击
+						itemclick:function( view, record, item, index, e, eOpts ){ 
+
+						//console.log(this.getRootNode().childNodes[index].data);
+							var json = record.data;
+							var tabs = this.ownerCt.down('tabpanel');
+							var tab = tabs.child('#tab-'+json.id);
+							// 是否添加
+							if(!tab){
+								tab = Ext.create('Ext.tab.Tab',{itemId:'tab-'+json.id,title:json.text,html:'第'+json.id+'显示'});
+								//tab = {itemId:'tab-'+json.id,title:json.text,html:'fff'};
+								tabs.add(tab);
+							}
+							//  激活
+							tabs.setActiveTab(tab);
+							
+						}
+					}
+				},{
+					region:'center',
+					xtype:'tabpanel',
+					layout: 'fit',
+					items: [{itemId:'tab-3',title:'欢迎',html:'美好一天从这里开始'}],
+					listeners:{
+						// 切换 tab 
+						tabchange:function( tabPanel, newCard, oldCard, eOpts ){ 
+							//  关联树操作
+							var tree = this.ownerCt.down('treepanel');
+							// 非空
+							if(newCard.itemId){
+								
+								var sp = newCard.itemId.split('-');
+								var xpath = '';
+								// 组成 path 
+								for(var i = 1 ; i < sp.length-1 ; i++){
+									xpath += sp[i]+'/';
+								}
+								// 最后值
+								var last = sp.join('-').replace('tab-','');
+								// 选择 tree
+								tree.selectPath('/root/'+xpath+last);
+							}
+						}
+					}
+				}]
+			});
+
+	}
+});
+	</script>
+
+	<style>
+	a{color:#fff;font-size:14px;}
+	.desc{font-size:14px;margin:10px; background:#EC5A4C;padding:20px;color:#fff;font-weight: bold;}
+	</style>
+	
+</head>
+<body>
+
+<div id="displaye" style="margin:10px;"></div>
+<div class="desc" >
+	<a href="http://blog.mttqq.com"  target="_blank">犸特头</a><br>
+	<a href="http://blog.mttqq.com"  target="_blank">http://blog.mttqq.com</a><br>
+	extjs 学习记录<br>
+	QQ群：311176787 <br>
+	<a target="_blank" href="http://wp.qq.com/wpa/qunwpa?idkey=f50865b2598688abcae47cca8ae48b5c1ea26a45194c640071eefdd7212d3a2e">
+	<img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="extjs 技术交流" title="extjs 技术交流"></a>
+</div>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+		
+			var store = Ext.create('Ext.data.TreeStore', {
+				root: {
+					expanded: true,
+					children: [
+						{id:3, text: "网络", expanded: true, children: [
+							{id:'3-1', text: "电子图书", leaf: true },
+							{id:'3-2', text: "开心游戏", leaf: true}
+						] },
+						{ id:4,text: "视频", leaf: true }
+					]
+				}
+			});
+			
+			Ext.create('Ext.panel.Panel',{
+				layout:'border',
+				height: 180,
+				renderTo: 'displaye',
+				items:[{
+					layout: 'fit',
+					region:'west',
+					//margin:5,
+					xtype:'treepanel',
+					title: '菜单树',
+					width: 200,
+					store: store,
+					split: true,  
+					collapsible: true, 
+					rootVisible: false,
+					listeners:{
+						// 加载
+						boxready:function(){
+							this.view.focus(); // 光标
+							this.getSelectionModel( ).select(this.getRootNode().childNodes[0]); // 选择 下标 0 
+						},
+						// 点击
+						itemclick:function( view, record, item, index, e, eOpts ){ 
+
+						//console.log(this.getRootNode().childNodes[index].data);
+							var json = record.data;
+							var tabs = this.ownerCt.down('tabpanel');
+							var tab = tabs.child('#tab-'+json.id);
+							// 是否添加
+							if(!tab){
+								tab = Ext.create('Ext.tab.Tab',{itemId:'tab-'+json.id,title:json.text,html:'fff'});
+								//tab = {itemId:'tab-'+json.id,title:json.text,html:'fff'};
+								tabs.add(tab);
+							}
+							//  激活
+							tabs.setActiveTab(tab);
+							
+						}
+					}
+				},{
+					region:'center',
+					xtype:'tabpanel',
+					layout: 'fit',
+					items: [{itemId:'tab-3',title:'欢迎',html:'fff'}],
+					listeners:{
+						// 切换 tab 
+						tabchange:function( tabPanel, newCard, oldCard, eOpts ){ 
+							//  关联树操作
+							var tree = this.ownerCt.down('treepanel');
+							// 非空
+							if(newCard.itemId){
+								
+								var sp = newCard.itemId.split('-');
+								var xpath = '';
+								// 组成 path 
+								for(var i = 1 ; i < sp.length-1 ; i++){
+									xpath += sp[i]+'/';
+								}
+								// 最后值
+								var last = sp.join('-').replace('tab-','');
+								// 选择 tree
+								tree.selectPath('/root/'+xpath+last);
+							}
+						}
+					}
+				}]
+			});
+</pre>
+</body>
+</html>
