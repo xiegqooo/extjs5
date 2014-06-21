@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Extjs 新布局之 center</title>
+	 <!-- Shared -->
+	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css">
+	<!-- ExtJS -->
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/ext-all-debug.js"></script> 
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-locale/build/ext-locale-zh_CN.js"></script> 
+<style>
+	a{color:#fff;font-size:14px;}
+	body{height:100%};
+</style>
+</head>
+<body>
+
+
+<div id="desc" style="font-size:14px;margin:10px; background:#EC5A4C;padding:20px;color:#fff;font-weight: bold;">
+	<a href="http://blog.mttqq.com"  target="_blank">犸特头</a><br>
+	<a href="http://blog.mttqq.com"  target="_blank">http://blog.mttqq.com</a><br>
+	extjs 学习记录<br>
+	QQ群：311176787 <br>
+	<a target="_blank" href="http://wp.qq.com/wpa/qunwpa?idkey=f50865b2598688abcae47cca8ae48b5c1ea26a45194c640071eefdd7212d3a2e">
+	<img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="extjs 技术交流" title="extjs 技术交流"></a>
+</div>
+
+<pre id="code" style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+&lt;script type="text/javascript"&gt;
+/**
+ *  文件名：当前文件
+ *  功能描述：新布局 center
+ *  日期：2014-06-21 
+ *  编写：犸特头
+ *  请查看：http://blog.mttqq.com
+ */
+Ext.application({
+	name:'hello',
+	launch:function(){
+	
+		Ext.create('Ext.container.Viewport', {
+			 layout: 'fit',
+			 renderTo: Ext.getBody(),
+			//*
+			items:[{
+				 autoScroll:true ,
+				 layout: 'center',
+				 items: [{
+					 width: '75%',  
+					 height:156,
+					 contentEl:'desc'
+				 }]
+			}]
+		});
+	}
+});
+&lt;/script&gt;
+</pre>
+
+<script type="text/javascript">
+//*
+/**
+ *  文件名：当前文件
+ *  功能描述：新布局 center
+ *  日期：2014-06-21 
+ *  编写：犸特头
+ *  请查看：http://blog.mttqq.com
+ */
+Ext.application({
+	name:'hello',
+	launch:function(){
+	
+		Ext.create('Ext.container.Viewport', {
+			 layout: 'fit',
+			 renderTo: Ext.getBody(),
+			//*
+			items:[{
+				 autoScroll:true ,
+				 layout: 'center',
+				 items: [{
+					 width: '75%',  
+					 height:156,
+					 contentEl:'desc'
+				 }]
+			}]
+			//*/
+			/*
+			  // 之前使用 vbox 进入水平布局
+			 items: [{
+				 autoScroll:true ,
+				 layout: {
+					type: 'vbox',
+					//vertical : false,
+					//align :'middle'
+					align :'center'
+				 },
+				 items:[{
+					 width: '75%',  
+					 height:156,
+					 contentEl:'desc'
+				 }]
+			}]
+			//*/
+		 });
+ 
+	}
+});
+
+</script>
+
+</body>
+</html>
