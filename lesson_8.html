@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Extjs uuid生成器</title>
+	 <!-- Shared -->
+	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css">
+	<!-- ExtJS -->
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/ext-all-debug.js"></script> 
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-locale/build/ext-locale-zh_CN.js"></script> 
+<style>
+	a{color:#fff;font-size:14px;}
+	body{height:100%};
+</style>
+</head>
+<body>
+
+
+<div id="desc" style="font-size:14px;margin:10px; background:#EC5A4C;padding:20px;color:#fff;font-weight: bold;">
+	<a href="http://blog.mttqq.com"  target="_blank">犸特头</a><br>
+	<a href="http://blog.mttqq.com"  target="_blank">http://blog.mttqq.com</a><br>
+	extjs 学习记录<br>
+	QQ群：311176787 <br>
+	<a target="_blank" href="http://wp.qq.com/wpa/qunwpa?idkey=f50865b2598688abcae47cca8ae48b5c1ea26a45194c640071eefdd7212d3a2e">
+	<img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="extjs 技术交流" title="extjs 技术交流"></a>
+</div>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+&lt;script type="text/javascript"&gt;
+/**
+ *  文件名：当前文件
+ *  功能描述：Extjs5 uuid 生成器
+ *  日期：2014-07-01 
+ *  编写：犸特头 Ext.require('Ext.data.SequentialIdGenerator') ;
+ *  请查看：http://blog.mttqq.com
+ */
+Ext.require([
+	'Ext.data.identifier.*'
+]);
+
+Ext.onReady(function() {
+
+	// uuid 使用 rfc4122.txt 协议生成
+	var uuid = Ext.create('Ext.data.identifier.Uuid',{
+		
+	});
+	
+	//extjs4.x Ext.data.IdGenerator.get('uuid).generate();
+
+	// 调用
+	console.log(uuid.generate());
+	console.log(uuid.generate());
+	console.log(uuid.generate());
+	
+	//顺序
+	var suid = Ext.create('Ext.data.identifier.Sequential',{
+		
+	});
+	
+	//extjs4.x Ext.data.IdGenerator.get('sequential').generate();
+	
+	console.log(suid.generate());
+	console.log(suid.generate());
+	console.log(suid.generate());
+	
+	//负值
+	var nuid = Ext.create('Ext.data.identifier.Negative',{
+		
+	});
+	
+	console.log(nuid.generate());
+	console.log(nuid.generate());
+	console.log(nuid.generate());
+		
+});
+&lt;/script&gt;
+</pre>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+Ext.data.IdGenerator.get('uuid).generate();
+Ext.data.IdGenerator.get('sequential').generate();
+</pre>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+&lt;script type="text/javascript"&gt;
+(function(){
+
+	var w = function(){
+		// 自定义内容
+	}
+	w.si = 0;
+	w.ni = 0 ;
+	
+	w.sequential = function(){
+		return w.si+=1;
+	}
+	w.negative = function(){
+		return w.ni-=1;
+	}
+	
+	// 支持 amd  规范
+	if (typeof define === 'function' && define.amd) {
+		define('underscore', function() {
+		  return w;
+		});
+	}else{
+		// 负给　windows 对象
+		this.w = w ;
+	}
+	
+}).call(this);
+
+
+console.log(w.sequential());
+console.log(w.sequential());
+console.log(w.sequential());
+console.log(w.sequential());
+console.log('=========================');
+console.log(w.negative());
+console.log(w.negative());
+console.log(w.negative());
+console.log(w.negative());
+&lt;/script&gt;
+</pre>
+
+<script type="text/javascript">
+
+/**
+ *  文件名：当前文件
+ *  功能描述：Extjs5 uuid 生成器
+ *  日期：2014-07-01 
+ *  编写：犸特头 Ext.require('Ext.data.SequentialIdGenerator') ;
+ *  请查看：http://blog.mttqq.com
+ */
+Ext.require([
+	'Ext.data.identifier.*'
+]);
+
+Ext.onReady(function() {
+
+		// uuid 使用 rfc4122.txt 协议生成
+		var uuid = Ext.create('Ext.data.identifier.Uuid',{
+			
+		});
+		
+		//extjs4.x Ext.data.IdGenerator.get('uuid).generate();
+	
+		// 调用
+		console.log(uuid.generate());
+		console.log(uuid.generate());
+		console.log(uuid.generate());
+		
+		//顺序
+		var suid = Ext.create('Ext.data.identifier.Sequential',{
+			
+		});
+		
+		//extjs4.x Ext.data.IdGenerator.get('sequential').generate();
+		
+		console.log(suid.generate());
+		console.log(suid.generate());
+		console.log(suid.generate());
+		
+		//负值
+		var nuid = Ext.create('Ext.data.identifier.Negative',{
+			
+		});
+		
+		console.log(nuid.generate());
+		console.log(nuid.generate());
+		console.log(nuid.generate());
+		
+});
+</script>
+
+</body>
+</html>
