@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Extjs uuid生成器</title>
+	 <!-- Shared -->
+	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css">
+	<!-- ExtJS -->
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/ext-all-debug.js"></script> 
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-locale/build/ext-locale-zh_CN.js"></script> 
+<style>
+	a{color:#fff;font-size:14px;}
+	body{height:100%};
+</style>
+</head>
+<body>
+
+<div id="displaye" style="padding:20px;"></div>
+
+<div id="desc" style="font-size:14px;margin:10px; background:#EC5A4C;padding:20px;color:#fff;font-weight: bold;">
+	<a href="http://blog.mttqq.com"  target="_blank">犸特头</a><br>
+	<a href="http://blog.mttqq.com"  target="_blank">http://blog.mttqq.com</a><br>
+	extjs 学习记录<br>
+	QQ群：311176787 <br>
+	<a target="_blank" href="http://wp.qq.com/wpa/qunwpa?idkey=f50865b2598688abcae47cca8ae48b5c1ea26a45194c640071eefdd7212d3a2e">
+	<img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="extjs 技术交流" title="extjs 技术交流"></a>
+</div>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+&lt;script type="text/javascript"&gt;
+
+/**
+ *  文件名：当前文件
+ *  功能描述：Extjs5 节点操作
+ *  日期：2014-07-03 
+ *  编写：犸特头 
+ *  请查看：http://blog.mttqq.com
+ */
+Ext.require([
+	'Ext.data.identifier.*'
+]);
+
+Ext.onReady(function() {
+
+	var store = Ext.create('Ext.data.TreeStore', {
+			root: {
+				expanded: true,
+				children: [
+					{id:3, text: "网络", expanded: true, children: [
+						{id:'3-1', text: "电子图书", leaf: true },
+						{id:'3-2', text: "开心游戏", leaf: true}
+					] },
+					{ id:4,text: "视频", leaf: true }
+				]
+			}
+		});
+		
+	var tree = Ext.create('Ext.tree.Panel',{
+		title: '菜单树',
+		width: 200,
+		store: store,
+		renderTo: 'displaye',
+		split: true,  
+		//collapsible: true, 
+		rootVisible: false,
+		dockedItems: [{
+			xtype: 'toolbar',
+			dock: 'bottom',
+			items: [{
+				text: '添加节点',
+				handler:function(btn){
+					// 提示输入
+					Ext.Msg.prompt('操作提示', '请输入节点名称:', function(btn, text){
+						if (btn == 'ok'){
+							// 选中节点
+							var sels = tree.getSelectionModel( ).selected.items[0];
+							// uuid 生成
+							var uuid = Ext.create('Ext.data.identifier.Uuid');
+							// 添加节点
+							sels.appendChild({ id:uuid.generate(),text: text, leaf: true });
+							sels.expand();
+						}
+					});
+				}
+			},{
+				text: '移除节点',
+				handler:function(btn){
+					// 选中节点
+					var sels = tree.getSelectionModel( ).selected.items[0];
+					sels.remove() ;
+				}
+			}]
+		}],
+		listeners:{
+			// 加载
+			boxready:function(){
+				this.view.focus(); // 光标
+				this.getSelectionModel( ).select(this.getRootNode().childNodes[0]); // 选择 下标 0 
+			}
+		}
+	});
+		
+});
+&lt;/script&gt;
+</pre>
+
+
+<script type="text/javascript">
+
+/**
+ *  文件名：当前文件
+ *  功能描述：Extjs5 节点操作
+ *  日期：2014-07-03 
+ *  编写：犸特头 
+ *  请查看：http://blog.mttqq.com
+ */
+Ext.require([
+	'Ext.data.identifier.*'
+]);
+
+Ext.onReady(function() {
+
+	var store = Ext.create('Ext.data.TreeStore', {
+			root: {
+				expanded: true,
+				children: [
+					{id:3, text: "网络", expanded: true, children: [
+						{id:'3-1', text: "电子图书", leaf: true },
+						{id:'3-2', text: "开心游戏", leaf: true}
+					] },
+					{ id:4,text: "视频", leaf: true }
+				]
+			}
+		});
+		
+	var tree = Ext.create('Ext.tree.Panel',{
+		title: '菜单树',
+		width: 200,
+		store: store,
+		renderTo: 'displaye',
+		split: true,  
+		//collapsible: true, 
+		rootVisible: false,
+		dockedItems: [{
+			xtype: 'toolbar',
+			dock: 'bottom',
+			items: [{
+				text: '添加节点',
+				handler:function(btn){
+					// 提示输入
+					Ext.Msg.prompt('操作提示', '请输入节点名称:', function(btn, text){
+						if (btn == 'ok'){
+							// 选中节点
+							var sels = tree.getSelectionModel( ).selected.items[0];
+							// uuid 生成
+							var uuid = Ext.create('Ext.data.identifier.Uuid');
+							// 添加节点
+							sels.appendChild({ id:uuid.generate(),text: text, leaf: true });
+							sels.expand();
+						}
+					});
+				}
+			},{
+				text: '移除节点',
+				handler:function(btn){
+					// 选中节点
+					var sels = tree.getSelectionModel( ).selected.items[0];
+					sels.remove() ;
+				}
+			}]
+		}],
+		listeners:{
+			// 加载
+			boxready:function(){
+				this.view.focus(); // 光标
+				this.getSelectionModel( ).select(this.getRootNode().childNodes[0]); // 选择 下标 0 
+			}
+		}
+	});
+		
+});
+</script>
+
+</body>
+</html>
