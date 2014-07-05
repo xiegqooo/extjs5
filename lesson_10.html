@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Extjs5 参比器</title>
+	 <!-- Shared -->
+	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css">
+	<!-- ExtJS -->
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/ext-all-debug.js"></script> 
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-locale/build/ext-locale-zh_CN.js"></script> 
+<style>
+	a{color:#fff;font-size:14px;}
+	body{height:100%};
+</style>
+</head>
+<body>
+
+<div id="displaye" style="padding:20px;"></div>
+
+<div id="desc" style="font-size:14px;margin:10px; background:#EC5A4C;padding:20px;color:#fff;font-weight: bold;">
+	<a href="http://blog.mttqq.com"  target="_blank">犸特头</a><br>
+	<a href="http://blog.mttqq.com"  target="_blank">http://blog.mttqq.com</a><br>
+	extjs 学习记录<br>
+	QQ群：311176787 <br>
+	<a target="_blank" href="http://wp.qq.com/wpa/qunwpa?idkey=f50865b2598688abcae47cca8ae48b5c1ea26a45194c640071eefdd7212d3a2e">
+	<img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="extjs 技术交流" title="extjs 技术交流"></a>
+</div>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+&lt;script type="text/javascript"&gt;
+/**
+ *  文件名：当前文件
+ *  功能描述：Extjs5 参比器
+ *  日期：2014-07-05 
+ *  编写：犸特头 
+ *  请查看：http://blog.mttqq.com
+ */
+Ext.require([
+	'Ext.data.identifier.*'
+]);
+
+Ext.onReady(function() {
+
+Ext.define('Login', {
+    extend: 'Ext.window.Window',
+
+    // This config is not compatible with the more common "controller" config
+    // used to specify a ViewController for the view. When a ViewController is
+    // specified it effectively acts as the "reference holder" for the view. In
+    // this example we simply mark this container as the reference holder for
+    // demonstration purposes.
+    referenceHolder: true,
+	boder:false,
+    title: '登录',
+    items: [{
+        xtype: 'form',
+		widht:300,
+        items: [{
+			margin:3,
+            xtype: 'textfield',
+			labelAlign:'right',
+            reference: 'username', // A named reference to be held on the referenceHolder
+            name: 'username',
+            fieldLabel: '用户名'
+        }, {
+			margin:3,
+            xtype: 'textfield',
+			labelAlign:'right',
+            reference: 'password', // A named reference to be held on the referenceHolder
+            name: 'password',
+            fieldLabel: '密码'
+        }] 
+    }] 
+});
+
+var w = Ext.create('Login');
+w.show();
+
+ var updateClock = function () {
+     console.log(w.lookupReference('password').getValue()); // The password field
+ };
+
+var runner = Ext.create('Ext.util.TaskRunner');
+var task = runner.newTask({
+     run: function () {
+         // useful code
+		 updateClock();
+     },
+     interval: 1000
+ });
+ task.start();
+
+w.on('close',function(){
+	task.stop();
+});
+
+
+		
+});
+&lt;/script&gt;
+</pre>
+
+
+<script type="text/javascript">
+
+/**
+ *  文件名：当前文件
+ *  功能描述：Extjs5 参比器
+ *  日期：2014-07-05 
+ *  编写：犸特头 
+ *  请查看：http://blog.mttqq.com
+ */
+Ext.require([
+	'Ext.data.identifier.*'
+]);
+
+Ext.onReady(function() {
+
+Ext.define('Login', {
+    extend: 'Ext.window.Window',
+
+    // This config is not compatible with the more common "controller" config
+    // used to specify a ViewController for the view. When a ViewController is
+    // specified it effectively acts as the "reference holder" for the view. In
+    // this example we simply mark this container as the reference holder for
+    // demonstration purposes.
+    referenceHolder: true,
+	boder:false,
+    title: '登录',
+    items: [{
+        xtype: 'form',
+		widht:300,
+        items: [{
+			margin:3,
+            xtype: 'textfield',
+			labelAlign:'right',
+            reference: 'username', // A named reference to be held on the referenceHolder
+            name: 'username',
+            fieldLabel: '用户名'
+        }, {
+			margin:3,
+            xtype: 'textfield',
+			labelAlign:'right',
+            reference: 'password', // A named reference to be held on the referenceHolder
+            name: 'password',
+            fieldLabel: '密码'
+        }] 
+    }] 
+});
+
+// 创建登录
+var w = Ext.create('Login');
+w.show();
+// 调用触发
+ var updateClock = function () {
+     console.log(w.lookupReference('password').getValue()); // The password field
+ };
+// 监听
+var runner = Ext.create('Ext.util.TaskRunner');
+var task = runner.newTask({
+     run: function () {
+         // useful code
+		 updateClock();
+     },
+     interval: 1000
+ });
+ task.start();
+// 登录关闭
+w.on('close',function(){
+	// 释放
+	task.stop();
+});
+		
+});
+</script>
+
+</body>
+</html>
