@@ -1,0 +1,22 @@
+﻿Ext.define('Login', {
+    extend: 'Ext.window.Window',
+	boder:false,
+    title: '登录',
+    items: [{
+        xtype: 'form',
+		widht:300,
+        items: [{
+			margin:3,
+            xtype: 'textfield',
+			labelAlign:'right',
+            name: 'username',
+            fieldLabel: '用户名'
+        }, {
+			margin:3,
+            xtype: 'textfield',
+			labelAlign:'right',
+            name: 'password',
+            fieldLabel: '密码'
+        }] 
+    }] 
+});
