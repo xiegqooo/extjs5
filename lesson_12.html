@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width" />
-<title>Extjs5 远程加载</title>
+<title>Extjs5 混入钩子</title>
 	 <!-- Shared -->
 	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css">
 	<!-- ExtJS -->
@@ -31,35 +31,19 @@
 &lt;script type="text/javascript"&gt;
 /**
  *  文件名：当前文件
- *  功能描述：Extjs5 远程加载
- *  日期：2014-07-11 
+ *  功能描述：Extjs5 混入钩子
+ *  日期：2014-07-14 
  *  编写：犸特头 
  *  请查看：http://blog.mttqq.com
  */
 
+
 Ext.onReady(function() {
 
-
-// ajax 异步加载
-Ext.Ajax.request({
-	url: 'remote.json',
-	// 加载参数
-	params: {
-		startDate: 1,
-		endDate: 2
-	},
-	// 成功加载
-	success: function(xhr) {
-		// 远程加载组件
-		var newComponent = eval(xhr.responseText); 
-		// 创建登录
-		var w = Ext.create('Login');
-		w.show();
-	},
-	failure: function() {
-		Ext.Msg.alert("Grid create failed", "Server communication failure");
-	}
-});
+ 
+// 调用
+var obj = Ext.create('Foo.bar.Derived');
+obj.destroy();
 		
 });
 &lt;/script&gt;
@@ -68,35 +52,48 @@ Ext.Ajax.request({
 <pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
 
 /**
- *  文件名：remote.json
- *  功能描述：组件内容
- *  日期：2014-07-11 
+ *  文件名：当前文件
+ *  功能描述：Extjs5 混入钩子
+ *  日期：2014-07-14 
  *  编写：犸特头 
  *  请查看：http://blog.mttqq.com
  */
 
-Ext.define('Login', {
-    extend: 'Ext.window.Window',
-	boder:false,
-    title: '登录',
-    items: [{
-        xtype: 'form',
-		widht:300,
-        items: [{
-			margin:3,
-            xtype: 'textfield',
-			labelAlign:'right',
-            name: 'username',
-            fieldLabel: '用户名'
-        }, {
-			margin:3,
-            xtype: 'textfield',
-			labelAlign:'right',
-            name: 'password',
-            fieldLabel: '密码'
-        }] 
-    }] 
+Ext.onReady(function() {
+
+// 定义基础类
+Ext.define('Foo.bar.Base', {
+ destroy: function () {
+	 console.log('B');
+	 // cleanup
+ }
 });
+
+// 定义 util 类
+Ext.define('Foo.bar.Util', {
+ destroy: function () {
+	 console.log('U');
+ }
+});
+
+// 混入钩子 
+Ext.define('Foo.bar.Derived', {
+     extend: 'Foo.bar.Base',
+
+     mixins: {
+         util: 'Foo.bar.Util' // 请用类名
+     },
+
+     destroy: function () {
+	    // 调用 util
+         this.mixins.util.destroy.call(this);
+		// 当前记录
+		 console.log('D');
+		 // 调用基础类
+		 this.callParent();
+     }
+ });
+
 </pre>
 
 
@@ -104,35 +101,51 @@ Ext.define('Login', {
 
 /**
  *  文件名：当前文件
- *  功能描述：Extjs5 远程加载
- *  日期：2014-07-11 
+ *  功能描述：Extjs5 混入钩子
+ *  日期：2014-07-14 
  *  编写：犸特头 
  *  请查看：http://blog.mttqq.com
  */
 
 Ext.onReady(function() {
 
-
-// ajax 异步加载
-Ext.Ajax.request({
-	url: 'remote.json',
-	// 加载参数
-	params: {
-		startDate: 1,
-		endDate: 2
-	},
-	// 成功加载
-	success: function(xhr) {
-		// 远程加载组件
-		var newComponent = eval(xhr.responseText); 
-		// 创建登录
-		var w = Ext.create('Login');
-		w.show();
-	},
-	failure: function() {
-		Ext.Msg.alert("Grid create failed", "Server communication failure");
-	}
+// 定义基础类
+Ext.define('Foo.bar.Base', {
+ destroy: function () {
+	 console.log('B');
+	 // cleanup
+ }
 });
+
+// 定义 util 类
+Ext.define('Foo.bar.Util', {
+ destroy: function () {
+	 console.log('U');
+ }
+});
+
+// 混入钩子 
+Ext.define('Foo.bar.Derived', {
+     extend: 'Foo.bar.Base',
+
+     mixins: {
+         util: 'Foo.bar.Util' // 请用类名
+     },
+
+     destroy: function () {
+	    // 调用 util
+         this.mixins.util.destroy.call(this);
+		// 当前记录
+		 console.log('D');
+		 // 调用基础类
+		 this.callParent();
+     }
+ });
+ 
+ 
+// 调用
+var obj = Ext.create('Foo.bar.Derived');
+obj.destroy();
 		
 });
 </script>

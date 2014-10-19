@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Extjs5- tag使用</title>
+	 <!-- Shared -->
+	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css">
+	<!-- ExtJS -->
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/ext-all-debug.js"></script> 
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-locale/build/ext-locale-zh_CN.js"></script> 
+<style>
+	a{color:#fff;font-size:14px;}
+	body{height:100%};
+</style>
+</head>
+<body>
+
+<div id="displaye" style="padding:20px;"></div>
+
+<div id="desc" style="font-size:14px;margin:10px; background:#EC5A4C;padding:20px;color:#fff;font-weight: bold;">
+	<a href="http://blog.mttqq.com"  target="_blank">犸特头</a><br>
+	<a href="http://blog.mttqq.com"  target="_blank">http://blog.mttqq.com</a><br>
+	extjs 学习记录<br>
+	QQ群：311176787 <br>
+	<a target="_blank" href="http://wp.qq.com/wpa/qunwpa?idkey=f50865b2598688abcae47cca8ae48b5c1ea26a45194c640071eefdd7212d3a2e">
+	<img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="extjs 技术交流" title="extjs 技术交流"></a>
+</div>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+
+{
+        xtype: 'tagfield',
+        fieldLabel: 'tag 选择',
+        store: {
+            type: 'states'
+        },
+       
+        displayField: 'state', // 显示内容
+        valueField: 'abbr', // 值
+        filterPickList: true,
+        queryMode: 'local', // 不通过远程操作
+		reference: 'states',  // 可以通过 state 调用
+        publishes: 'value' // 调用 显示值
+}
+
+</pre>
+
+
+
+<script type="text/javascript">
+
+/**
+ *  文件名：当前文件
+ *  功能描述：Tag 多选择管理
+ *  日期：2014-09-25
+ *  编写：犸特头 
+ *  请查看：http://blog.mttqq.com
+ */
+
+Ext.onReady(function() {
+
+
+////////////////////model/////////////////////////////
+
+Ext.define('KitchenSink.model.State', {
+    extend: 'Ext.data.Model',
+
+    fields: [
+        'abbr',
+        'state',
+        'description',
+        'country'
+    ]
+});
+
+////////////////////store/////////////////////////////
+
+Ext.define('KitchenSink.store.States', {
+    extend: 'Ext.data.ArrayStore',
+
+    alias: 'store.states',
+
+    model: 'KitchenSink.model.State',
+    
+    storeId: 'states',
+    
+    data: [
+        ['AL', 'Alabama', 'The Heart of Dixie'],
+        ['AK', 'Alaska', 'The Land of the Midnight Sun'],
+        ['AZ', 'Arizona', 'The Grand Canyon State'],
+        ['AR', 'Arkansas', 'The Natural State'],
+        ['CA', 'California', 'The Golden State'],
+        ['CO', 'Colorado', 'The Mountain State'],
+        ['CT', 'Connecticut', 'The Constitution State'],
+        ['DE', 'Delaware', 'The First State'],
+        ['DC', 'District of Columbia', "The Nation's Capital"],
+        ['FL', 'Florida', 'The Sunshine State'],
+        ['GA', 'Georgia', 'The Peach State'],
+        ['HI', 'Hawaii', 'The Aloha State'],
+        ['ID', 'Idaho', 'Famous Potatoes'],
+        ['IL', 'Illinois', 'The Prairie State'],
+        ['IN', 'Indiana', 'The Hospitality State'],
+        ['IA', 'Iowa', 'The Corn State'],
+        ['KS', 'Kansas', 'The Sunflower State'],
+        ['KY', 'Kentucky', 'The Bluegrass State'],
+        ['LA', 'Louisiana', 'The Bayou State'],
+        ['ME', 'Maine', 'The Pine Tree State'],
+        ['MD', 'Maryland', 'Chesapeake State'],
+        ['MA', 'Massachusetts', 'The Spirit of America'],
+        ['MI', 'Michigan', 'Great Lakes State'],
+        ['MN', 'Minnesota', 'North Star State'],
+        ['MS', 'Mississippi', 'Magnolia State'],
+        ['MO', 'Missouri', 'Show Me State'],
+        ['MT', 'Montana', 'Big Sky Country'],
+        ['NE', 'Nebraska', 'Beef State'],
+        ['NV', 'Nevada', 'Silver State'],
+        ['NH', 'New Hampshire', 'Granite State'],
+        ['NJ', 'New Jersey', 'Garden State'],
+        ['NM', 'New Mexico', 'Land of Enchantment'],
+        ['NY', 'New York', 'Empire State'],
+        ['NC', 'North Carolina', 'First in Freedom'],
+        ['ND', 'North Dakota', 'Peace Garden State'],
+        ['OH', 'Ohio', 'The Heart of it All'],
+        ['OK', 'Oklahoma', 'Oklahoma is OK'],
+        ['OR', 'Oregon', 'Pacific Wonderland'],
+        ['PA', 'Pennsylvania', 'Keystone State'],
+        ['RI', 'Rhode Island', 'Ocean State'],
+        ['SC', 'South Carolina', 'Nothing Could be Finer'],
+        ['SD', 'South Dakota', 'Great Faces, Great Places'],
+        ['TN', 'Tennessee', 'Volunteer State'],
+        ['TX', 'Texas', 'Lone Star State'],
+        ['UT', 'Utah', 'Salt Lake State'],
+        ['VT', 'Vermont', 'Green Mountain State'],
+        ['VA', 'Virginia', 'Mother of States'],
+        ['WA', 'Washington', 'Green Tree State'],
+        ['WV', 'West Virginia', 'Mountain State'],
+        ['WI', 'Wisconsin', "America's Dairyland"],
+        ['WY', 'Wyoming', 'Like No Place on Earth']
+    ]
+});
+
+
+////////////////////Tag/////////////////////////////
+
+Ext.define('KitchenSink.view.form.Tag', {
+    extend: 'Ext.panel.Panel',
+    xtype: 'form-tag',
+
+    requires: [
+        'Ext.form.field.Tag'
+    ],
+    
+    title: 'Select State(s)',
+    bodyPadding: 5,
+    frame: true,
+    width: 600,
+    layout: 'form',
+    viewModel: {},
+
+	renderTo: 'displaye',
+	
+    items: [{
+        xtype: 'displayfield',
+        fieldLabel: '显示选中内容:',
+        bind: '{states.value}' // 调用
+    },{
+        xtype: 'tagfield',
+        fieldLabel: 'tag 选择',
+        store: {
+            type: 'states'
+        },
+       
+        displayField: 'state', // 显示内容
+        valueField: 'abbr', // 值
+        filterPickList: true,
+        queryMode: 'local', // 不通过远程操作
+		reference: 'states',  // 可以通过 state 调用
+        publishes: 'value' // 调用 显示值
+    }]
+});
+
+Ext.create('KitchenSink.view.form.Tag');
+
+///////////////////////////////////////////////////////
+	
+});
+</script>
+
+</body>
+</html>

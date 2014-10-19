@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Extjs5 离线代理</title>
+	 <!-- Shared -->
+	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css">
+	<!-- ExtJS -->
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/ext-all-debug.js"></script> 
+	<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.0.0/build/packages/ext-locale/build/ext-locale-zh_CN.js"></script> 
+<style>
+	a{color:#fff;font-size:14px;}
+	body{height:100%};
+</style>
+</head>
+<body>
+
+<div id="displaye" style="padding:20px;"></div>
+
+<div id="desc" style="font-size:14px;margin:10px; background:#EC5A4C;padding:20px;color:#fff;font-weight: bold;">
+	<a href="http://blog.mttqq.com"  target="_blank">犸特头</a><br>
+	<a href="http://blog.mttqq.com"  target="_blank">http://blog.mttqq.com</a><br>
+	extjs 学习记录<br>
+	QQ群：311176787 <br>
+	<a target="_blank" href="http://wp.qq.com/wpa/qunwpa?idkey=f50865b2598688abcae47cca8ae48b5c1ea26a45194c640071eefdd7212d3a2e">
+	<img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="extjs 技术交流" title="extjs 技术交流"></a>
+</div>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+&lt;script type="text/javascript"&gt;
+/**
+ *  文件名：当前文件
+ *  功能描述：Extjs5 混入钩子
+ *  日期：2014-07-14 
+ *  编写：犸特头 
+ *  请查看：http://blog.mttqq.com
+ */
+
+
+Ext.onReady(function() {
+
+ 
+// 调用
+var obj = Ext.create('Foo.bar.Derived');
+obj.destroy();
+		
+});
+&lt;/script&gt;
+</pre>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+// 调用
+
+ Ext.define('MyApp.User', {
+     extend: 'Ext.data.Model',
+	 proxy: {
+        type: 'offline',
+		storageKey      : 'buttons',
+		storageFacility : storage.WebSQL,
+        //url: '/test.jsond',
+		api: {
+			create  : '/controller/new',
+			read    : '/test.json', // load
+			update  : '/controller/update',
+			destroy : '/controller/destroy_action'
+		},
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+     fields: ['name', 'url', 'size', 'lastmod']
+ });
+
+// 调用
+MyApp.User.load(123);
+
+var user = Ext.create('MyApp.User', {name: 'Ed Spencer', url: 'ed@sencha.com',size:12,lastmod:'2014-07-30 10:21'});
+user.save();
+</pre>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+	/**
+ * A class that gives access into WebSQL storage
+ */
+Ext.define('storage.WebSQL', {
+ 
+    singleton: true,
+ 
+    config:{
+        /**
+         * The database capacity in bytes (can't be changed after construction). 50MB by default.
+         */
+        capacity:50 * 1024 * 1024
+    },
+ 
+    /**
+     * @private
+     * The websql database object.
+     */
+    storage:null,
+ 
+    connected: false,
+ 
+    constructor: function (config) {
+        this.callParent(config);
+ 
+        this.storage = openDatabase('storage', '1.0', 'Offline resource storage', this.getCapacity());
+ 
+        this.storage.transaction(function (tx) {
+            tx.executeSql('CREATE TABLE IF NOT EXISTS items (key, value)');
+        }, function (error) {
+            console.error('WebSQL: Connection Error');
+        }, function () {
+            console.log('WebSQL: Connected');
+        });
+    },
+ 
+    /**
+     * Get an item from the store.
+     * @param key The key to get.
+     * @param callbacks object of success and failure callbacks
+     */
+    getItem:function (key, callbacks) {
+ 
+        this.storage.transaction(function (tx) {
+            tx.executeSql('SELECT * FROM items WHERE key = ?', [key], function (tx, results) {
+ 
+                var len = results.rows.length;
+ 
+                if (len > 0) {
+                    callbacks.success(results.rows.item(0).value)
+                } else {
+                    callbacks.failure(); // no result
+                }
+            });
+        }, function (error) {
+            console.log('WebSQL: Error in getItem');
+            callbacks.failure(error);
+        });
+    },
+ 
+    /**
+     * Set an item in the store.
+     * @param key The key to set.
+     * @param value The string to store.
+     * @param callbacks object of success and failure callbacks
+     */
+    setItem:function (key, value, callbacks) {
+ 
+        this.storage.transaction(function (tx) {
+            //remove old version first
+            tx.executeSql('DELETE FROM items WHERE key = ?', [key]);
+            tx.executeSql('INSERT INTO items (key, value) VALUES (?, ?)', [key, value]);
+        }, function (error) {
+            console.log('WebSQL: Error in setItem:' + error.message);
+            callbacks.failure(error.message);
+        }, function () {
+            callbacks.success(); // no value.
+        });
+    }
+});
+
+</pre>
+
+<pre style="background-color: #F7F7F7 !important; border: 1px solid #D9D9D9;padding:6px;margin:10px;">
+Ext.define('AM.proxy.OfflineProxy', {
+		extend: 'Ext.data.proxy.Ajax',
+		alias: 'proxy.offline',
+		// 配置内容
+		config: {
+			storageKey: null,
+	 
+			storageFacility: null,
+	 
+			online: true
+		},
+		
+		doRequest: function(operation, callback, scope) {
+ 
+        var that = this,
+            passCallback,
+            request,
+            fakedResponse = {};
+ 
+        this.originalCallback = callback;
+ 
+        function failedRequest() {
+            fakedResponse.status = 500;
+            fakedResponse.responseText = 'Error';
+            fakedResponse.statusText = 'ERROR';
+ 
+            that.processResponse(false, operation, request, fakedResponse, passCallback, scope);
+        }
+ 
+        if(this.getOnline()) {
+            console.log('PROXY: Loading from online resource');
+            return this.callParent(arguments);
+        }else{
+            console.log('PROXY: Loading from offline resource');
+            request = this.buildRequest(operation);
+            passCallback = this.createRequestCallback(request, operation, callback, scope);
+ 
+            if(this.getStorageKey() && this.getStorageFacility()) {
+ 
+                this.getStorageFacility().getItem(this.getStorageKey(),  {
+                    success: function(dataString) {
+ 
+                        fakedResponse.status = 200;
+                        fakedResponse.responseText = dataString;
+                        fakedResponse.statusText = 'OK';
+ 
+                        that.processResponse(true, operation, request, fakedResponse, passCallback, scope);
+ 
+                    },
+                    failure: failedRequest
+                });
+            }else{
+                console.error('No storage key or facility for proxy');
+                setTimeout(function() {
+                    failedRequest();
+                }, 1);
+ 
+            }
+ 
+        }
+ 
+    },
+	processResponse: function(success, operation, request, response, callback, scope) {
+ 
+        var that = this;
+ 
+        if(success) {
+ 
+            console.log('PROXY: Request succeeded');
+ 
+ 
+            this.callParent(arguments);
+ 
+            if(this.getOnline()) {
+                if(this.getStorageKey() && this.getStorageFacility()) {
+                    this.getStorageFacility().setItem(this.getStorageKey(), response.responseText, {
+                        success: function() {
+                            console.log('PROXY: Data stored to offline storage: ' + that.getStorageKey());
+                        },
+                        failure: function(error) {
+                            console.log('PROXY: Error in storing data: ' + that.getStorageKey());
+                        }
+                    });
+                }else{
+                    console.error('PROXY: No storage key or facility for proxy');
+                }
+            }
+ 
+        }else{
+            if(this.getOnline()) {
+                //If the request failed and we were online, we need to try and fall back to offline
+                console.log('PROXY: Request failed, will try to fallback to offline');
+                this.setOnline(false);
+ 
+                this.doRequest(operation, this.originalCallback, scope);
+            }else{
+                this.callParent(arguments);
+            }
+        }
+ 
+ 
+    }
+	
+	});
+</pre>
+
+
+<script type="text/javascript">
+
+/**
+ *  文件名：当前文件
+ *  功能描述：Extjs5 混入钩子
+ *  日期：2014-07-14 
+ *  编写：犸特头 
+ *  请查看：http://blog.mttqq.com
+ */
+
+Ext.onReady(function() {
+
+	Ext.define('AM.proxy.OfflineProxy', {
+		extend: 'Ext.data.proxy.Ajax',
+		alias: 'proxy.offline',
+		// 配置内容
+		config: {
+			storageKey: null,
+	 
+			storageFacility: null,
+	 
+			online: true
+		},
+		
+		doRequest: function(operation, callback, scope) {
+ 
+        var that = this,
+            passCallback,
+            request,
+            fakedResponse = {};
+ 
+        this.originalCallback = callback;
+ 
+        function failedRequest() {
+            fakedResponse.status = 500;
+            fakedResponse.responseText = 'Error';
+            fakedResponse.statusText = 'ERROR';
+ 
+            that.processResponse(false, operation, request, fakedResponse, passCallback, scope);
+        }
+ 
+        if(this.getOnline()) {
+            console.log('PROXY: Loading from online resource');
+            return this.callParent(arguments);
+        }else{
+            console.log('PROXY: Loading from offline resource');
+            request = this.buildRequest(operation);
+            passCallback = this.createRequestCallback(request, operation, callback, scope);
+ 
+            if(this.getStorageKey() && this.getStorageFacility()) {
+ 
+                this.getStorageFacility().getItem(this.getStorageKey(),  {
+                    success: function(dataString) {
+ 
+                        fakedResponse.status = 200;
+                        fakedResponse.responseText = dataString;
+                        fakedResponse.statusText = 'OK';
+ 
+                        that.processResponse(true, operation, request, fakedResponse, passCallback, scope);
+ 
+                    },
+                    failure: failedRequest
+                });
+            }else{
+                console.error('No storage key or facility for proxy');
+                setTimeout(function() {
+                    failedRequest();
+                }, 1);
+ 
+            }
+ 
+        }
+ 
+    },
+	processResponse: function(success, operation, request, response, callback, scope) {
+ 
+        var that = this;
+ 
+        if(success) {
+ 
+            console.log('PROXY: Request succeeded');
+ 
+ 
+            this.callParent(arguments);
+ 
+            if(this.getOnline()) {
+                if(this.getStorageKey() && this.getStorageFacility()) {
+                    this.getStorageFacility().setItem(this.getStorageKey(), response.responseText, {
+                        success: function() {
+                            console.log('PROXY: Data stored to offline storage: ' + that.getStorageKey());
+                        },
+                        failure: function(error) {
+                            console.log('PROXY: Error in storing data: ' + that.getStorageKey());
+                        }
+                    });
+                }else{
+                    console.error('PROXY: No storage key or facility for proxy');
+                }
+            }
+ 
+        }else{
+            if(this.getOnline()) {
+                //If the request failed and we were online, we need to try and fall back to offline
+                console.log('PROXY: Request failed, will try to fallback to offline');
+                this.setOnline(false);
+ 
+                this.doRequest(operation, this.originalCallback, scope);
+            }else{
+                this.callParent(arguments);
+            }
+        }
+ 
+ 
+    }
+	
+	});
+	
+	/**
+ * A class that gives access into WebSQL storage
+ */
+Ext.define('storage.WebSQL', {
+ 
+    singleton: true,
+ 
+    config:{
+        /**
+         * The database capacity in bytes (can't be changed after construction). 50MB by default.
+         */
+        capacity:50 * 1024 * 1024
+    },
+ 
+    /**
+     * @private
+     * The websql database object.
+     */
+    storage:null,
+ 
+    connected: false,
+ 
+    constructor: function (config) {
+        this.callParent(config);
+ 
+        this.storage = openDatabase('storage', '1.0', 'Offline resource storage', this.getCapacity());
+ 
+        this.storage.transaction(function (tx) {
+            tx.executeSql('CREATE TABLE IF NOT EXISTS items (key, value)');
+        }, function (error) {
+            console.error('WebSQL: Connection Error');
+        }, function () {
+            console.log('WebSQL: Connected');
+        });
+    },
+ 
+    /**
+     * Get an item from the store.
+     * @param key The key to get.
+     * @param callbacks object of success and failure callbacks
+     */
+    getItem:function (key, callbacks) {
+ 
+        this.storage.transaction(function (tx) {
+            tx.executeSql('SELECT * FROM items WHERE key = ?', [key], function (tx, results) {
+ 
+                var len = results.rows.length;
+ 
+                if (len > 0) {
+                    callbacks.success(results.rows.item(0).value)
+                } else {
+                    callbacks.failure(); // no result
+                }
+            });
+        }, function (error) {
+            console.log('WebSQL: Error in getItem');
+            callbacks.failure(error);
+        });
+    },
+ 
+    /**
+     * Set an item in the store.
+     * @param key The key to set.
+     * @param value The string to store.
+     * @param callbacks object of success and failure callbacks
+     */
+    setItem:function (key, value, callbacks) {
+ 
+        this.storage.transaction(function (tx) {
+            //remove old version first
+            tx.executeSql('DELETE FROM items WHERE key = ?', [key]);
+            tx.executeSql('INSERT INTO items (key, value) VALUES (?, ?)', [key, value]);
+        }, function (error) {
+            console.log('WebSQL: Error in setItem:' + error.message);
+            callbacks.failure(error.message);
+        }, function () {
+            callbacks.success(); // no value.
+        });
+    }
+});
+
+
+// 调用
+
+ Ext.define('MyApp.User', {
+     extend: 'Ext.data.Model',
+	 proxy: {
+        type: 'offline',
+		storageKey      : 'buttons',
+		storageFacility : storage.WebSQL,
+        //url: '/test.jsond',
+		api: {
+			create  : '/controller/new',
+			read    : '/test.json', // load
+			update  : '/controller/update',
+			destroy : '/controller/destroy_action'
+		},
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+     fields: ['name', 'url', 'size', 'lastmod']
+ });
+
+// 调用
+MyApp.User.load(123);
+
+var user = Ext.create('MyApp.User', {name: 'Ed Spencer', url: 'ed@sencha.com',size:12,lastmod:'2014-07-30 10:21'});
+user.save();
+	
+});
+</script>
+
+</body>
+</html>
